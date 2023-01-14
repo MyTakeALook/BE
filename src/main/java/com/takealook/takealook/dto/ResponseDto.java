@@ -6,7 +6,15 @@ import lombok.Getter;
 public class ResponseDto {
     private boolean result;
 
-    public ResponseDto() {
+    //public ResponseDto() {
+        //this.result = true;
+    //}
+
+    public void ResponseTrue() {
         this.result = true;
+    }
+
+    public void ResponseFalse() {
+        this.result = false;
     }
 }

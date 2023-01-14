@@ -1,6 +1,7 @@
 package com.takealook.takealook.dto;
 
 import com.takealook.takealook.entity.Board;
+import com.takealook.takealook.entity.Comment;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class BoardResponseDto {
     private Integer age;
     private String gender;
     private String text;
+    private List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
 
     public BoardResponseDto(Board board) {
         this.id = board.getBoardId();
@@ -29,5 +31,12 @@ public class BoardResponseDto {
         this.age = board.getAge();
         this.gender = board.getGender();
         this.text = board.getText();
+        for (Comment comment : board.getComment()) {
+            if (comment.isDelete()) {
+                continue;
+            }
+            CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
+            this.commentResponseDtoList.add(commentResponseDto);
+        }
     }
 }

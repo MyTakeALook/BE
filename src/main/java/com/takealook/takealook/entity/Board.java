@@ -2,6 +2,7 @@ package com.takealook.takealook.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.takealook.takealook.dto.BoardRequestDto;
+import com.takealook.takealook.entity.Liked;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +29,11 @@ public class Board extends BaseTimeEntity{
     private String gender;
     @Column
     private String text;
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Comment> comment = new ArrayList<>();
+    @ManyToOne
+    private Liked liked;
     private boolean isDelete = false;
 
     public Board(BoardRequestDto boardRequestDto) {
@@ -38,7 +44,6 @@ public class Board extends BaseTimeEntity{
         this.gender = boardRequestDto.getGender();
         this.text = boardRequestDto.getText();
     }
-
     public void BoardPatch(BoardRequestDto boardRequestDto) {
         this.title = (boardRequestDto.getTitle() == null) ? this.getTitle() : boardRequestDto.getTitle();
         this.imageurl = (boardRequestDto.getImageUrl() == null) ? this.getImageurl() : boardRequestDto.getImageUrl();
@@ -47,7 +52,6 @@ public class Board extends BaseTimeEntity{
         this.gender = (boardRequestDto.getGender() == null) ? this.getGender() : boardRequestDto.getGender();
         this.text = (boardRequestDto.getText() == null) ? this.getText() : boardRequestDto.getText();
     }
-
     public void BoardDelete() {
         this.isDelete = true;
     }

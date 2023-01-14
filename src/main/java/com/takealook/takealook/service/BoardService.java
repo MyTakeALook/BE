@@ -38,6 +38,7 @@ public class BoardService {
             BoardResponseDto boardResponseDto = new BoardResponseDto(board);
             boardResponseDtoList.add(boardResponseDto);
         }
+
         return boardResponseDtoList;
     }
 
@@ -71,7 +72,12 @@ public class BoardService {
         }
         board.get().BoardDelete();
         ResponseDto responseDto = new ResponseDto();
+        responseDto.ResponseTrue();
         return responseDto;
     }
 
+//    @Transactional
+//    public ResponseDto loveBoard(Long boardId) {
+//        boardRepository.findByBoardId()
+//    }
 }

@@ -6,12 +6,19 @@ import com.takealook.takealook.dto.ResponseDto;
 import com.takealook.takealook.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class HomeController {
     private final BoardService boardService;
+    @GetMapping("/")
+    public ModelAndView home() { // -> homeController
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("index"); //뷰의 이름
+        return mv; // view + data passvariable
+    }
     @PostMapping("/index/submit") // -> 공통된거 requestMapping
     public BoardResponseDto boardCreate(@RequestBody BoardRequestDto boardRequestDto) {
         BoardResponseDto boardResponseDto = boardService.createBoard(boardRequestDto);
@@ -41,4 +48,11 @@ public class HomeController {
         ResponseDto responseDto = boardService.deleteBoard(boardId);
         return responseDto;
     }
+
+//    @PostMapping("/board/love/{boardId}") // -> 공통된거 requestMapping
+//    public ResponseDto boardLove(@PathVariable Long boardId) {
+//        ResponseDto responseDto = boardService.loveBoard(boardId);
+//        return responseDto;
+//    }
+
 }
