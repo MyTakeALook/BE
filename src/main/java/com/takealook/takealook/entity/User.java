@@ -25,14 +25,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private com.takealook.takealook.entity.UserRoleEnum role;
+    private UserRoleEnum role;
 
-//    @OneToMany
-//    List<Board> boards = new ArrayList<>();
 
-    public User(String username, String password, com.takealook.takealook.entity.UserRoleEnum role){
+    public User(String username, String password, UserRoleEnum role){
         this.username = username;
         this.password = password;
         this.role = role;

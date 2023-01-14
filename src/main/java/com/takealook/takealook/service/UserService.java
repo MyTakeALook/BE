@@ -3,6 +3,7 @@ package com.takealook.takealook.service;
 import com.takealook.takealook.dto.JoinRequestDto;
 import com.takealook.takealook.dto.LoginRequestDto;
 import com.takealook.takealook.entity.User;
+import com.takealook.takealook.entity.UserRoleEnum;
 import com.takealook.takealook.jwt.JwtUtil;
 import com.takealook.takealook.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +28,15 @@ public class UserService {
     public void signup(JoinRequestDto joinRequestDto) {
         String username = joinRequestDto.getUsername();
         String password = passwordEncoder.encode(joinRequestDto.getPassword());
+
         // 아이디 중복 확인
         if (userRepository.findByUsername(username).isPresent()){
             throw new IllegalArgumentException("username이 중복됩니다.");
         }
 
-        User user = new User(username, password);
+        UserRoleEnum userRoleEnum = UserRoleEnum.USER;
+
+        User user = new User(username, password, userRoleEnum);
         userRepository.save(user);
     }
 

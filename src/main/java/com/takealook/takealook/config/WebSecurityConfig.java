@@ -46,12 +46,12 @@ public class WebSecurityConfig {
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests()
-                .antMatchers("/user/**").permitAll()
-                .antMatchers("/board").permitAll()
-                .antMatchers(HttpMethod.POST, "/exception/**").permitAll()  //exception url 허용??
-//                .antMatchers("/").permitAll()              /// 이렇게 전부 인가 해주면되나 ??
-                .anyRequest().authenticated()
+        http.authorizeRequests().anyRequest().permitAll()
+//                .antMatchers("/user/**").permitAll()
+//                .antMatchers("/board").permitAll()
+//                .antMatchers(HttpMethod.POST, "/exception/**").permitAll()  //exception url 허용??
+////                .antMatchers("/").permitAll()              /// 이렇게 전부 인가 해주면되나 ??
+//                .anyRequest().authenticated()
                 // JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
