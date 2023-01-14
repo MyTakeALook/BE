@@ -5,8 +5,10 @@ import com.takealook.takealook.dto.BoardResponseDto;
 import com.takealook.takealook.entity.Board;
 import com.takealook.takealook.dto.ResponseDto;
 import com.takealook.takealook.repository.BoardRepository;
+import com.takealook.takealook.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,8 +78,4 @@ public class BoardService {
         return responseDto;
     }
 
-//    @Transactional
-//    public ResponseDto loveBoard(Long boardId) {
-//        boardRepository.findByBoardId()
-//    }
 }

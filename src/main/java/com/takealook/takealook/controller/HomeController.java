@@ -3,8 +3,10 @@ package com.takealook.takealook.controller;
 import com.takealook.takealook.dto.BoardRequestDto;
 import com.takealook.takealook.dto.BoardResponseDto;
 import com.takealook.takealook.dto.ResponseDto;
+import com.takealook.takealook.security.UserDetailsImpl;
 import com.takealook.takealook.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,7 +22,8 @@ public class HomeController {
         return mv; // view + data passvariable
     }
     @PostMapping("/index/submit") // -> 공통된거 requestMapping
-    public BoardResponseDto boardCreate(@RequestBody BoardRequestDto boardRequestDto) {
+    public BoardResponseDto boardCreate(@RequestBody BoardRequestDto boardRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        System.out.println(userDetailsImpl);
         BoardResponseDto boardResponseDto = boardService.createBoard(boardRequestDto);
         return boardResponseDto;
     }
