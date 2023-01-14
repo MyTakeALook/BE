@@ -2,7 +2,6 @@ package com.takealook.takealook.dto;
 
 import lombok.Getter;
 
-import javax.persistence.Column;
 
 @Getter
 public class BoardRequestDto {

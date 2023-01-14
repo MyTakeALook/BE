@@ -14,7 +14,7 @@ import java.util.List;
 public class HomeController {
     private final BoardService boardService;
     @GetMapping("/")
-    public ModelAndView home() { // -> homeController
+    public ModelAndView home() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("index"); //뷰의 이름
         return mv; // view + data passvariable

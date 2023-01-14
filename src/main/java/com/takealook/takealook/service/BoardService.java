@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class BoardService {
-    private final BoardRepository boardRepository;
+    private final BoardRepository boardRepository; //
     @Transactional
     public BoardResponseDto createBoard(BoardRequestDto boardRequestDto) {
         Board board = new Board(boardRequestDto);

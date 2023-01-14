@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class BoardResponseDto {
+public class BoardResponseDto { //
     private long id;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;

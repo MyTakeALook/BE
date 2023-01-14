@@ -25,7 +25,7 @@ public class CommentService {
                 () -> new IllegalArgumentException("게시판이 존재하지 않습니다.")
         );
         Comment comment = new Comment(commentRequestDto, board);
-        commentRepository.save(comment);
+        commentRepository.save(comment); //
         CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
         return commentResponseDto;
     }

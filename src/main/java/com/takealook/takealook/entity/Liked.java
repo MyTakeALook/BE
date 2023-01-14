@@ -14,5 +14,5 @@ import javax.persistence.Id;
 public class Liked {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    Long id; //
 }

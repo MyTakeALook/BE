@@ -32,5 +32,5 @@ public class Comment extends BaseTimeEntity{
     }
     public void CommentDelete() {
         this.isDelete = true;
-    }
+    } //
 }

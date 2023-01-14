@@ -34,7 +34,7 @@ public class Board extends BaseTimeEntity{
     private List<Comment> comment = new ArrayList<>();
     @ManyToOne
     private Liked liked;
-    private boolean isDelete = false;
+    private boolean isDelete = false; //
 
     public Board(BoardRequestDto boardRequestDto) {
         this.imageurl = boardRequestDto.getImageUrl();
