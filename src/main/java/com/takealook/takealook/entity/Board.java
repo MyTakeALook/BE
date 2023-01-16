@@ -59,5 +59,7 @@ public class Board extends BaseTimeEntity{
     public void BoardDelete() {
         this.isDelete = true;
     }
-    public void BoardVisit() {this.visit += 1L;}
+    public void BoardVisit() {
+        this.visit += 1L;
+    }
 }
