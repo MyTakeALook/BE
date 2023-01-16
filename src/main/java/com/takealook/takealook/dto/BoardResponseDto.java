@@ -43,6 +43,5 @@ public class BoardResponseDto { //
         }
         this.love = likedSize;
         this.visit = board.getVisit();
-        System.out.println("Response가 말합니다 visit = "+board.getVisit());
     }
 }
