@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 public class BoardResponseDto { //
-    private long id;
+    private long boardId;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private String title;
@@ -20,9 +20,10 @@ public class BoardResponseDto { //
     private String gender;
     private String text;
     private List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+    private Long love;
 
-    public BoardResponseDto(Board board) {
-        this.id = board.getBoardId();
+    public BoardResponseDto(Board board, Long likedSize) {
+        this.boardId = board.getBoardId();
         this.createdAt = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
         this.title = board.getTitle();
@@ -38,5 +39,6 @@ public class BoardResponseDto { //
             CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
             this.commentResponseDtoList.add(commentResponseDto);
         }
+        this.love = likedSize;
     }
 }
