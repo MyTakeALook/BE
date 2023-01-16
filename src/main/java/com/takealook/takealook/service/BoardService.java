@@ -103,12 +103,14 @@ public class BoardService {
 
     public BoardResponseDto readBoard(Long boardId) {
         Optional<Board> board = boardRepository.findByBoardId(boardId);
-        board.get().BoardVisit();
 
         if (board.get().isDelete()) {
             throw new IllegalArgumentException("이미 삭제된 게시물입니다.");
         }
-
+        if (board.isPresent()){
+            board.get().BoardVisit(); //잘 작동함. board에 visit 값이 올라감. 그럼 뭐가 문제? 리스폰스문제일까
+            boardRepository.save(board.get());  // 저장을 안해서 자꾸만 visit가 0으로 초기화됐었다 !! 저장을 했더니 해결
+        }
         List<Liked> likedList = likeRepository.findAllByBoard(board.get());
 
         BoardResponseDto boardResponseDto = new BoardResponseDto(board.get(), Long.valueOf(likedList.size()));
@@ -141,7 +143,7 @@ public class BoardService {
     @Transactional
     public ResponseDto deleteBoard(Long boardId, UserDetailsImpl userDetailsImpl) {
         Optional<Board> board = boardRepository.findByBoardId(boardId);
-        if (board.get().isDelete() == false) {
+        if (!board.get().isDelete()) {
             board.get().BoardDelete();
             List<Comment> commentList = board.get().getComment();
             for (Comment comment : commentList) {

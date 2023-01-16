@@ -21,6 +21,8 @@ public class BoardResponseDto { //
     private String text;
     private List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
     private Long love;
+    private Long visit;
+
 
     public BoardResponseDto(Board board, Long likedSize) {
         this.boardId = board.getBoardId();
@@ -40,5 +42,7 @@ public class BoardResponseDto { //
             this.commentResponseDtoList.add(commentResponseDto);
         }
         this.love = likedSize;
+        this.visit = board.getVisit();
+        System.out.println("Response가 말합니다 visit = "+board.getVisit());
     }
 }

@@ -59,5 +59,9 @@ public class Board extends BaseTimeEntity{
     public void BoardDelete() {
         this.isDelete = true;
     }
-    public void BoardVisit() {this.visit += 1L;}
+    public void BoardVisit() {
+        System.out.println(" visit가  = "+this.getVisit());
+        this.visit += 1L;
+        System.out.println("에서 "+this.getVisit()+"으로 바뀌엇읍니다 !!~~!!! ");
+    }
 }
