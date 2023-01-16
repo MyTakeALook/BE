@@ -4,7 +4,73 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+
 <body>
-    /테스트/
+    <form action="/upload" name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post">
+        <input type="file" name="file" id="file">
+        <input type="submit">
+        <!--        <input type="button" onclick="filePost()" value="제출">-->
+    </form>
+    <img src="img/111111111111111.png" style="width:10rem; height:10rem;">
+    <!--$.ajax({
+    url: '/uploadAjaxAction',
+    processData: false,
+    contentType: false,
+    data: formData,
+    type: 'POST',
+    dataType: 'json',
+    success: function(result) {
+    console.log(result);
+    }
+    });-->
 </body>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+    // function filePost() {
+    //     //const fileInput = document.querySelector("#file");
+    //     // let form = $('#uploadForm');
+    //     // let formData = new FormData(form[0]);
+    //     let formData = new FormData();
+    //     formData.append("file", $('#file').val());
+    //     for (let value of formData.values()) {
+    //         console.log(value);
+    //     }
+    //     //let file = $('#file').val();
+    //     let data = {'file':formData};
+    //     $.ajax({
+    //         type: "POST",
+    //         enctype: 'multipart/form-data',
+    //         url: "/upload",
+    //         data: data,
+    //         datatype: "json",
+    //         contentType: false,
+    //         processData: false,
+    //         success: function (response) {
+    //             alert('로그인이 성공적으로 진행되었습니다.');
+    //         }
+    //     });
+    // }
+
+
+    //
+    // function  getToken() {
+    //     let cName = 'Authorization' + '=';
+    //     let cookieData = document.cookie;
+    //     let cookie = cookieData.indexOf('Authorization');
+    //     let auth = '';
+    //     if(cookie !== -1){
+    //         cookie += cName.length;
+    //         let end = cookieData.indexOf(';', cookie);
+    //         if(end === -1)end = cookieData.length;
+    //         auth = cookieData.substring(cookie, end);
+    //     }
+    //
+    //     // kakao 로그인 사용한 경우 Bearer 추가
+    //     if(auth.indexOf('Bearer') === -1 && auth !== ''){
+    //         auth = 'Bearer ' + auth;
+    //     }
+    //
+    //     return auth;
+    // }
+</script>
 </html>

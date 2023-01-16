@@ -5,6 +5,7 @@ import com.takealook.takealook.dto.BoardRequestDto;
 import com.takealook.takealook.entity.Liked;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,24 +30,27 @@ public class Board extends BaseTimeEntity{
     private String gender;
     @Column
     private String text;
+    @ManyToOne
+    private User user;
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Comment> comment = new ArrayList<>();
-    @ManyToOne
-    private Liked liked;
-    private boolean isDelete = false; //
+    private boolean isDelete = false;
+    @Column
+    private Long visit = 0L;
 
-    public Board(BoardRequestDto boardRequestDto) {
-        this.imageurl = boardRequestDto.getImageUrl();
+    public Board(BoardRequestDto boardRequestDto, String imageurl, User user) {
+        this.imageurl = imageurl;
         this.title = boardRequestDto.getTitle();
         this.catName = boardRequestDto.getCatName();
         this.age = boardRequestDto.getAge();
         this.gender = boardRequestDto.getGender();
         this.text = boardRequestDto.getText();
+        this.user = user;
     }
-    public void BoardPatch(BoardRequestDto boardRequestDto) {
+    public void BoardPatch(BoardRequestDto boardRequestDto, String imageurl) {
         this.title = (boardRequestDto.getTitle() == null) ? this.getTitle() : boardRequestDto.getTitle();
-        this.imageurl = (boardRequestDto.getImageUrl() == null) ? this.getImageurl() : boardRequestDto.getImageUrl();
+        this.imageurl = (imageurl == null) ? this.getImageurl() : imageurl;
         this.catName = (boardRequestDto.getCatName() == null) ? this.getCatName() : boardRequestDto.getCatName();
         this.age = (boardRequestDto.getAge() == null) ? this.getAge() : boardRequestDto.getAge();
         this.gender = (boardRequestDto.getGender() == null) ? this.getGender() : boardRequestDto.getGender();
@@ -55,4 +59,5 @@ public class Board extends BaseTimeEntity{
     public void BoardDelete() {
         this.isDelete = true;
     }
+    public void BoardVisit() {this.visit += 1L;}
 }
