@@ -56,6 +56,14 @@ public class Board extends BaseTimeEntity{
         this.gender = (boardRequestDto.getGender() == null) ? this.getGender() : boardRequestDto.getGender();
         this.text = (boardRequestDto.getText() == null) ? this.getText() : boardRequestDto.getText();
     }
+    public void BoardPatchNoImage(BoardRequestDto boardRequestDto) {
+        this.title = (boardRequestDto.getTitle() == null) ? this.getTitle() : boardRequestDto.getTitle();
+        this.imageurl = this.getImageurl();
+        this.catName = (boardRequestDto.getCatName() == null) ? this.getCatName() : boardRequestDto.getCatName();
+        this.age = (boardRequestDto.getAge() == null) ? this.getAge() : boardRequestDto.getAge();
+        this.gender = (boardRequestDto.getGender() == null) ? this.getGender() : boardRequestDto.getGender();
+        this.text = (boardRequestDto.getText() == null) ? this.getText() : boardRequestDto.getText();
+    }
     public void BoardDelete() {
         this.isDelete = true;
     }
