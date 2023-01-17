@@ -7,7 +7,9 @@
 
 <body>
     <form action="/upload" name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post">
-        <input type="file" name="file" id="file">
+        <input type="text" class="form-control" name="title">
+        <textarea class="form-control" rows="3" name="text"></textarea>
+        <input type="file" name="urlimage">
         <input type="submit">
         <!--        <input type="button" onclick="filePost()" value="제출">-->
     </form>

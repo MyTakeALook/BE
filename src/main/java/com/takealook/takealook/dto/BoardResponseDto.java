@@ -3,6 +3,7 @@ package com.takealook.takealook.dto;
 import com.takealook.takealook.entity.Board;
 import com.takealook.takealook.entity.Comment;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,6 +35,8 @@ public class BoardResponseDto { //
         this.age = board.getAge();
         this.gender = board.getGender();
         this.text = board.getText();
+        this.love = likedSize;
+        this.visit = board.getVisit();
         for (Comment comment : board.getComment()) {
             if (comment.isDelete()) {
                 continue;
@@ -41,7 +44,5 @@ public class BoardResponseDto { //
             CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
             this.commentResponseDtoList.add(commentResponseDto);
         }
-        this.love = likedSize;
-        this.visit = board.getVisit();
     }
 }

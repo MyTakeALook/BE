@@ -15,9 +15,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
-    @PostMapping("/board/{boardId}")
+    @PostMapping("/board/{boardId}") // @RequestBody
     public CommentResponseDto commentCreate(@PathVariable Long boardId,
-                                            @RequestBody CommentRequestDto commentRequestDto,
+                                            CommentRequestDto commentRequestDto,
                                             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         CommentResponseDto commentResponseDto = commentService.createComment(boardId, commentRequestDto, userDetailsImpl);
         return commentResponseDto;
@@ -29,10 +29,10 @@ public class CommentController {
         return commentResponseDtoList;
     }
 
-    @PutMapping("/board/{boardId}/{commentId}")
+    @PutMapping("/board/{boardId}/{commentId}") // @RequestBody
     public CommentResponseDto commentPut(@PathVariable Long boardId,
                                            @PathVariable Long commentId,
-                                           @RequestBody CommentRequestDto commentRequestDto,
+                                           CommentRequestDto commentRequestDto,
                                            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         CommentResponseDto commentResponseDto = commentService.putComment(boardId, commentId, commentRequestDto, userDetailsImpl);
         return commentResponseDto;

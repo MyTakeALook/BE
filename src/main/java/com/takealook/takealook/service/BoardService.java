@@ -1,5 +1,8 @@
 package com.takealook.takealook.service;
 
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.takealook.takealook.dto.BoardRequestDto;
 import com.takealook.takealook.dto.BoardResponseDto;
 import com.takealook.takealook.entity.Board;
@@ -11,6 +14,7 @@ import com.takealook.takealook.repository.LikeRepository;
 import com.takealook.takealook.repository.UserRepository;
 import com.takealook.takealook.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -26,17 +30,48 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.*;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+
 @Service
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository; //
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private String S3Bucket = "mysparta1"; // Bucket 이름
+    @Autowired
+    AmazonS3Client amazonS3Client;
     @Transactional
-    public BoardResponseDto createBoard(BoardRequestDto boardRequestDto, UserDetailsImpl userDetailsImpl) throws IOException {
-        //String fullPath = "/C:\\Users\\USER\\Desktop\\hanghae99\\springmvc\\BE\\src\\main\\resources\\static\\img/" + file.getOriginalFilename();
-        String imageurl = "img/"; // + file.getOriginalFilename();
-        //file.transferTo(new File(fullPath)); // IOException 처리 해줘야함
+    public BoardResponseDto createBoard(BoardRequestDto boardRequestDto, MultipartFile urlimage, UserDetailsImpl userDetailsImpl) throws IOException {
+        if (urlimage != null) {
+            if (!urlimage.getOriginalFilename().equals("")) {
+                String originalName = urlimage.getOriginalFilename();
+                long size = urlimage.getSize();
+
+                ObjectMetadata objectMetaData = new ObjectMetadata();
+                objectMetaData.setContentType(urlimage.getContentType());
+                objectMetaData.setContentLength(size);
+
+                amazonS3Client.putObject(
+                        new PutObjectRequest(S3Bucket, originalName, urlimage.getInputStream(), objectMetaData)
+                                .withCannedAcl(CannedAccessControlList.PublicRead)
+                );
+//                String fullPath = "/C:\\Users\\USER\\Desktop\\hanghae99\\springmvc\\BE\\src\\main\\resources\\static\\img/" + urlimage.getOriginalFilename();
+//                urlimage.transferTo(new File(fullPath)); // IOException 처리 해줘야함
+            }
+        }
+
+        String imageurl;
+        if (urlimage != null) {
+//            imageurl = "img/" + urlimage.getOriginalFilename();
+            String originalName = urlimage.getOriginalFilename();
+            imageurl = amazonS3Client.getUrl(S3Bucket, originalName).toString(); // 접근가능한 URL 가져오기
+        } else {
+            imageurl = "img/";
+        }
 
         Board board = new Board(boardRequestDto, imageurl, userDetailsImpl.getUser());
 
@@ -118,7 +153,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponseDto patchBoard(Long boardId, BoardRequestDto boardRequestDto, UserDetailsImpl userDetailsImpl) throws IOException {
+    public BoardResponseDto patchBoard(Long boardId, BoardRequestDto boardRequestDto, MultipartFile urlimage, UserDetailsImpl userDetailsImpl) throws IOException {
         Optional<Board> board = boardRepository.findByBoardId(boardId);
 
         if (board.get().isDelete()) {
@@ -128,11 +163,31 @@ public class BoardService {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
 
-        //        String fullPath = "/C:\\Users\\USER\\Desktop\\hanghae99\\springmvc\\BE\\src\\main\\resources\\static\\img/" + file.getOriginalFilename();
-                String imageurl = "img/"; // + file.getOriginalFilename();
-        //        file.transferTo(new File(fullPath)); // IOException 처리 해줘야함
+        System.out.println(urlimage);
+        if (urlimage != null) {
+            if (!urlimage.getOriginalFilename().equals("")) {
+                String originalName = urlimage.getOriginalFilename();
+                long size = urlimage.getSize();
 
-        board.get().BoardPatch(boardRequestDto, imageurl);
+                ObjectMetadata objectMetaData = new ObjectMetadata();
+                objectMetaData.setContentType(urlimage.getContentType());
+                objectMetaData.setContentLength(size);
+
+                amazonS3Client.putObject(
+                        new PutObjectRequest(S3Bucket, originalName, urlimage.getInputStream(), objectMetaData)
+                                .withCannedAcl(CannedAccessControlList.PublicRead)
+                );
+
+//                String fullPath = "/C:\\Users\\USER\\Desktop\\hanghae99\\springmvc\\BE\\src\\main\\resources\\static\\img/" + urlimage.getOriginalFilename();
+//                urlimage.transferTo(new File(fullPath)); // IOException 처리 해줘야함
+                String imageurl = amazonS3Client.getUrl(S3Bucket, originalName).toString(); // 접근가능한 URL 가져오기
+                board.get().BoardPatch(boardRequestDto, imageurl);
+            } else {
+                board.get().BoardPatchNoImage(boardRequestDto);
+            }
+        } else {
+            board.get().BoardPatchNoImage(boardRequestDto);
+        }
 
         List<Liked> likedList = likeRepository.findAllByBoard(board.get());
 
@@ -165,16 +220,17 @@ public class BoardService {
     public ResponseDto likeBoard(Long boardId, UserDetailsImpl userDetailsImpl) {
         Optional<Board> board = boardRepository.findByBoardId(boardId);
 
+        ResponseDto responseDto = new ResponseDto();
         if (likeRepository.findByUserAndBoard(userDetailsImpl.getUser(), board.get()).isPresent()) {
             Optional<Liked> liked = likeRepository.findByUserAndBoard(userDetailsImpl.getUser(), board.get());
             likeRepository.delete(liked.get());
+            responseDto.ResponseFalse();
         } else {
             Liked liked = new Liked(userDetailsImpl.getUser(), board.get());
             likeRepository.save(liked);
+            responseDto.ResponseTrue();
         }
 
-        ResponseDto responseDto = new ResponseDto();
-        responseDto.ResponseTrue();
         return responseDto;
     }
 
