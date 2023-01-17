@@ -46,9 +46,12 @@ public class BoardService {
     AmazonS3Client amazonS3Client;
     @Transactional
     public BoardResponseDto createBoard(BoardRequestDto boardRequestDto, MultipartFile urlimage, UserDetailsImpl userDetailsImpl) throws IOException {
+        String imageurl;
+
         if (urlimage != null) {
             if (!urlimage.getOriginalFilename().equals("")) {
-                String originalName = urlimage.getOriginalFilename();
+                String originalName = UUID.randomUUID().toString();
+                System.out.println(originalName);
                 long size = urlimage.getSize();
 
                 ObjectMetadata objectMetaData = new ObjectMetadata();
@@ -59,18 +62,14 @@ public class BoardService {
                         new PutObjectRequest(S3Bucket, originalName, urlimage.getInputStream(), objectMetaData)
                                 .withCannedAcl(CannedAccessControlList.PublicRead)
                 );
-//                String fullPath = "/C:\\Users\\USER\\Desktop\\hanghae99\\springmvc\\BE\\src\\main\\resources\\static\\img/" + urlimage.getOriginalFilename();
-//                urlimage.transferTo(new File(fullPath)); // IOException 처리 해줘야함
-            }
-        }
 
-        String imageurl;
-        if (urlimage != null) {
-//            imageurl = "img/" + urlimage.getOriginalFilename();
-            String originalName = urlimage.getOriginalFilename();
-            imageurl = amazonS3Client.getUrl(S3Bucket, originalName).toString(); // 접근가능한 URL 가져오기
+                imageurl = amazonS3Client.getUrl(S3Bucket, originalName).toString();
+            }
+            else {
+                imageurl = "";
+            }
         } else {
-            imageurl = "img/";
+            imageurl = "";
         }
 
         Board board = new Board(boardRequestDto, imageurl, userDetailsImpl.getUser());
@@ -166,7 +165,7 @@ public class BoardService {
         System.out.println(urlimage);
         if (urlimage != null) {
             if (!urlimage.getOriginalFilename().equals("")) {
-                String originalName = urlimage.getOriginalFilename();
+                String originalName = UUID.randomUUID().toString();
                 long size = urlimage.getSize();
 
                 ObjectMetadata objectMetaData = new ObjectMetadata();
@@ -178,8 +177,6 @@ public class BoardService {
                                 .withCannedAcl(CannedAccessControlList.PublicRead)
                 );
 
-//                String fullPath = "/C:\\Users\\USER\\Desktop\\hanghae99\\springmvc\\BE\\src\\main\\resources\\static\\img/" + urlimage.getOriginalFilename();
-//                urlimage.transferTo(new File(fullPath)); // IOException 처리 해줘야함
                 String imageurl = amazonS3Client.getUrl(S3Bucket, originalName).toString(); // 접근가능한 URL 가져오기
                 board.get().BoardPatch(boardRequestDto, imageurl);
             } else {

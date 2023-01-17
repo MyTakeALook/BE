@@ -22,14 +22,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
 @EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 어노테이션 활성화
 public class WebSecurityConfig {
-
     private final JwtUtil jwtUtil;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -38,6 +36,7 @@ public class WebSecurityConfig {
 //                .requestMatchers(PathRequest.toH2Console())  //이거 있었더니 계속 H2를 찾아댐;
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
+    // .requestMatchers(PathRequest.toH2Console()) = 이거 때문에 자꾸 h2를 찾음 No qualifying bean of type 'org.springframework.boot.autoconfigure.h2.H2ConsoleProperties' available
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -55,9 +54,7 @@ public class WebSecurityConfig {
                 // JWT 인증/인가를 사용하기 위한 설정
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
-
 //        http.formLogin().loginPage("/user/login").permitAll();
-
 
 //        http.exceptionHandling().accessDeniedPage("/api/user/forbidden");
 
