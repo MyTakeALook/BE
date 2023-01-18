@@ -43,7 +43,13 @@ public class HomeController {
     }*/
 
     @PostMapping("/index/submit") // form 형식으로 받을 경우 @RequestBody 빼줘야하는거 같음
-    public BoardResponseDto boardCreate(BoardRequestDto boardRequestDto, @RequestParam(value = "imageurl", required = false) MultipartFile urlimage, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws IOException {
+    public BoardResponseDto boardCreate(@RequestBody BoardRequestDto boardRequestDto, @RequestParam(value = "imageurl", required = false) MultipartFile urlimage, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws IOException {
+        System.out.println("BoardRequestDto확인");
+        System.out.println(boardRequestDto.getText());
+        System.out.println(boardRequestDto.getAge());
+        System.out.println(boardRequestDto.getCatName());
+        System.out.println("BoardRequestDto확인");
+
         BoardResponseDto boardResponseDto = boardService.createBoard(boardRequestDto, urlimage, userDetailsImpl);
         return boardResponseDto;
     }
@@ -75,7 +81,7 @@ public class HomeController {
     }
 
     @PatchMapping("/index/detail/{boardId}")
-    public BoardResponseDto boardPatch(@PathVariable Long boardId, BoardRequestDto boardRequestDto, @RequestParam(value = "imageurl", required = false) MultipartFile urlimage, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws IOException {
+    public BoardResponseDto boardPatch(@PathVariable Long boardId, @RequestBody BoardRequestDto boardRequestDto, @RequestParam(value = "imageurl", required = false) MultipartFile urlimage, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) throws IOException {
         BoardResponseDto boardResponseDto = boardService.patchBoard(boardId, boardRequestDto, urlimage, userDetailsImpl);
         return boardResponseDto;
     }

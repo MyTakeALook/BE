@@ -17,8 +17,13 @@ public class CommentController {
     private final CommentService commentService;
     @PostMapping("/board/{boardId}") // @RequestBody
     public CommentResponseDto commentCreate(@PathVariable Long boardId,
-                                            CommentRequestDto commentRequestDto,
+                                            @RequestBody CommentRequestDto commentRequestDto,
                                             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        System.out.println("1111111111111111111111111111111111");
+        System.out.println(boardId);
+        System.out.println(commentRequestDto);
+        System.out.println(userDetailsImpl.getUser().getUsername());
+        System.out.println("1111111111111111111111111111111111");
         return commentService.createComment(boardId, commentRequestDto, userDetailsImpl);
     }
 
@@ -30,7 +35,7 @@ public class CommentController {
     @PatchMapping("/board/{boardId}/{commentId}") // @RequestBody
     public CommentResponseDto commentPatch(@PathVariable Long boardId,
                                            @PathVariable Long commentId,
-                                           CommentRequestDto commentRequestDto,
+                                           @RequestBody CommentRequestDto commentRequestDto,
                                            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         return commentService.putComment(boardId, commentId, commentRequestDto, userDetailsImpl);
     }

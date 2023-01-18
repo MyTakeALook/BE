@@ -18,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup") //@RequestBody
-    public ResponseEntity<AuthMessage> signup(@Valid JoinRequestDto joinRequestDto) {
+    public ResponseEntity<AuthMessage> signup(@RequestBody JoinRequestDto joinRequestDto) {
         userService.signup(joinRequestDto);
         AuthMessage authMessage = new AuthMessage("회원가입 성공");
         return new ResponseEntity<>(authMessage, OK);
@@ -26,7 +26,7 @@ public class UserController {
 
     @ResponseBody
     @PostMapping("/login") //@RequestBody
-    public LoginErrorMessage login(LoginRequestDto loginRequestDto,
+    public LoginErrorMessage login(@RequestBody LoginRequestDto loginRequestDto,
                                              HttpServletResponse response) {
         LoginErrorMessage loginErrorMessage = userService.login(loginRequestDto, response);
 

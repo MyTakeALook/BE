@@ -22,6 +22,9 @@ public class CommentService {
     private final CommentRepository commentRepository;
     @Transactional
     public CommentResponseDto createComment(Long boardId, CommentRequestDto commentRequestDto, UserDetailsImpl userDetailsImpl) {
+        System.out.println(boardId);
+        System.out.println(commentRequestDto);
+        System.out.println(userDetailsImpl.getUser().getUsername());
         Board board = boardRepository.findById(boardId).orElseThrow(
                 () -> new IllegalArgumentException("게시판이 존재하지 않습니다.")
         );
