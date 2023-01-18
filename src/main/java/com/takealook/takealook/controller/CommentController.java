@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,12 +20,17 @@ public class CommentController {
     @PostMapping("/board/{boardId}") // @RequestBody
     public CommentResponseDto commentCreate(@PathVariable Long boardId,
                                             @RequestBody CommentRequestDto commentRequestDto,
-                                            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+                                            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+                                            HttpServletRequest request) throws IOException {
+
         System.out.println("1111111111111111111111111111111111");
         System.out.println(boardId);
-        System.out.println(commentRequestDto);
-        System.out.println(userDetailsImpl.getUser().getUsername());
+        System.out.println(request.getReader().readLine());
+        System.out.println(commentRequestDto.getComment()); // null
+        System.out.println(request.getReader().readLine());
+        //System.out.println(userDetailsImpl.getUser().getUsername());
         System.out.println("1111111111111111111111111111111111");
+
         return commentService.createComment(boardId, commentRequestDto, userDetailsImpl);
     }
 

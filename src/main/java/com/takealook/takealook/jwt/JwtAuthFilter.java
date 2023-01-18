@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,7 +27,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         System.out.println("authtoken");
-        System.out.println(request);
+        System.out.println(request.getHeader("Authorization"));
+        System.out.println("여기로 오나");
+        Enumeration eHeader = request.getHeaderNames();
+        while (eHeader.hasMoreElements()) {
+            System.out.println("여기로 오나");
+            String request_Name = (String)eHeader.nextElement();
+            String request_Value = request.getHeader(request_Name);
+            System.out.println("request_Name : " + request_Name + " request_Value : " + request_Value);
+        }
         System.out.println("authtoken");
         String token = jwtUtil.resolveToken(request);
         System.out.println("11111111111111111");
