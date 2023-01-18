@@ -27,12 +27,15 @@ public class CommentService {
         );
         Comment comment = new Comment(commentRequestDto, board, userDetailsImpl.getUser());
         commentRepository.save(comment);
-        CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
-        return commentResponseDto;
+        return new CommentResponseDto(comment);
     }
 
     public List<CommentResponseDto> readCommentList(Long boardId) {
         Optional<Board> board = boardRepository.findByBoardId(boardId);
+
+        if (board.get().isDelete()){
+            throw new IllegalArgumentException("삭제된 게시글의 댓글입니다.");
+        }
 
         List<Comment> commentList = commentRepository.findAllByBoardOrderByModifiedAtAsc(board.get()); // 복수형
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
@@ -57,8 +60,7 @@ public class CommentService {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
         comment.CommentPut(commentRequestDto);
-        CommentResponseDto commentResponseDto = new CommentResponseDto(comment);
-        return commentResponseDto;
+        return new CommentResponseDto(comment);
     }
 
     @Transactional
@@ -66,7 +68,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
         );
-        if (comment.isDelete() == false) {
+        if (!comment.isDelete()) {
             comment.CommentDelete();
         } else {
             throw new IllegalArgumentException("이미 삭제된 게시물입니다.");

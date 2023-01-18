@@ -4,6 +4,7 @@ import com.takealook.takealook.dto.BoardRequestDto;
 import com.takealook.takealook.dto.BoardResponseDto;
 import com.takealook.takealook.dto.ResponseDto;
 import com.takealook.takealook.dto.TestRequest;
+import com.takealook.takealook.entity.Board;
 import com.takealook.takealook.security.UserDetailsImpl;
 import com.takealook.takealook.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,15 @@ public class HomeController {
         data.put("rankBoard", boardResponseRankDtoList);
         data.put("boardList", boardResponseDtoList);
         return data;
+    }
+
+    @GetMapping("/index/boardList")
+    public List<BoardResponseDto> readBoardList() {
+        return boardService.readBoardList();
+    }
+    @GetMapping("/index/rankBoard")
+    public List<BoardResponseDto> readBoardRank(){
+        return boardService.readBoardRankList();
     }
 
     @GetMapping("/index/detail/{boardId}")

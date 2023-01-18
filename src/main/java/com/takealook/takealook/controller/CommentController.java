@@ -19,27 +19,26 @@ public class CommentController {
     public CommentResponseDto commentCreate(@PathVariable Long boardId,
                                             CommentRequestDto commentRequestDto,
                                             @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-        CommentResponseDto commentResponseDto = commentService.createComment(boardId, commentRequestDto, userDetailsImpl);
-        return commentResponseDto;
+        return commentService.createComment(boardId, commentRequestDto, userDetailsImpl);
     }
 
     @GetMapping("/board/{boardId}")
     public List<CommentResponseDto> commentRead(@PathVariable Long boardId) {
-        List<CommentResponseDto> commentResponseDtoList = commentService.readCommentList(boardId);
-        return commentResponseDtoList;
+        return commentService.readCommentList(boardId);
     }
 
-    @PutMapping("/board/{boardId}/{commentId}") // @RequestBody
-    public CommentResponseDto commentPut(@PathVariable Long boardId,
+    @PatchMapping("/board/{boardId}/{commentId}") // @RequestBody
+    public CommentResponseDto commentPatch(@PathVariable Long boardId,
                                            @PathVariable Long commentId,
                                            CommentRequestDto commentRequestDto,
                                            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-        CommentResponseDto commentResponseDto = commentService.putComment(boardId, commentId, commentRequestDto, userDetailsImpl);
-        return commentResponseDto;
+        return commentService.putComment(boardId, commentId, commentRequestDto, userDetailsImpl);
     }
 
     @DeleteMapping("/board/{boardId}/{commentId}")
-    public ResponseDto commentDelete(@PathVariable Long boardId, @PathVariable Long commentId, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+    public ResponseDto commentDelete(@PathVariable Long boardId,
+                                     @PathVariable Long commentId,
+                                     @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
         return commentService.deleteComment(commentId, userDetailsImpl);
     }
 }
