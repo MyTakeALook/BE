@@ -1,10 +1,12 @@
 package com.takealook.takealook.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 
 @Getter
+@NoArgsConstructor
 public class BoardRequestDto {
     private String title;
     private String catName;

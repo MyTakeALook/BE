@@ -1,8 +1,10 @@
 package com.takealook.takealook.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class LoginErrorMessage {
     private Integer status;
     private String msg;

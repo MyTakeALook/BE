@@ -1,5 +1,8 @@
 package com.takealook.takealook.dto;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class TestRequest {
     private String title;
     private String content;

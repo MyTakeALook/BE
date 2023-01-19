@@ -1,11 +1,13 @@
 package com.takealook.takealook.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class JoinRequestDto {
 
     //@Size(min=4,max=10)

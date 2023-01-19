@@ -3,6 +3,7 @@ package com.takealook.takealook.dto;
 import com.takealook.takealook.entity.Board;
 import com.takealook.takealook.entity.Comment;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class BoardResponseDto { //
     private long boardId;
     private LocalDateTime createdAt;
