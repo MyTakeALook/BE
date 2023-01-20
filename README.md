@@ -2,7 +2,6 @@
 
 저희 주인님을 소개합니다.  
 집사로써 저희 주인님 자랑좀 하겠습니다. **"저는 집사니까요"**  
-~~http://firstquarter.shop/~~ (2021.07.05 AWS 비용 문제로 서버를 내렸습니다)
 
 <br>
 
@@ -22,17 +21,24 @@
 
 ## 2. 사용 기술
 
-`Back-end`
-
-- Python 3
-- Flask 2.0.1
-- MongoDB 4.4
+#### Back-end
+<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=spring&logoColor=white" /> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white" /> 
+<img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=nginx&logoColor=white" /> 
+<img src="https://img.shields.io/badge/Stomp-010101?style=flat-square&logoColor=white" />
+<img src="https://img.shields.io/badge/AmazonEC2-FF9900?style=flat-square&logo=amazonec2&logoColor=white" /> 
+<img src="https://img.shields.io/badge/AmazonS3-569A31?style=flat-square&logo=amazons3&logoColor=white" /> 
+<img src="https://img.shields.io/badge/AmazonRDS-527FFF?style=flat-square&logo=amazonrds&logoColor=white" /> 
 
 `Front-end`
 
-- Axios
-- React
-- styled-components
+#### Front-end
+![javaScript](https://camo.githubusercontent.com/fe1c8df487dbc029d3a1819dcc5bf79e066f1307131191ac2b02de8c3c55da81/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4a6176615363726970742d4637444631453f7374796c653d266c6f676f3d4a617661536372697074266c6f676f436f6c6f723d7768697465)
+![React](https://camo.githubusercontent.com/34c6a7afcc16731e2c4d73f3af9b275b172b2e46dc1e82be3f121a71fe067de9/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f52656163742d3631444146423f7374796c653d266c6f676f3d5265616374266c6f676f436f6c6f723d7768697465)
+![Redux](https://camo.githubusercontent.com/d58ceb12a14709c7049878ae358ef7628e42d4276108b758cbb66a8922e7ef3e/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f52656475782d3736344142433f7374796c653d266c6f676f3d5265647578266c6f676f436f6c6f723d7768697465)
+![ReactRouter](https://camo.githubusercontent.com/d257f8e18789ba1e6d34a9c63cbe150083c96b6f0da2eb059ae02422914ea80a/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f526561637420526f757465722d4341343234353f7374796c653d266c6f676f3d526561637420526f75746572266c6f676f436f6c6f723d7768697465)
+![Axios](https://camo.githubusercontent.com/809053601ae7a670d58865bd88e0f313cc5ced1c0915ff43aeb2ad1d1bf252c2/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4178696f732d3638323865323f7374796c653d)
+![styledComponents](https://camo.githubusercontent.com/8d29f15964b1cb2254deccb293a2c444eee52078b3d448b6149c17c5ab40d2ce/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f7374796c65642d636f6d706f6e656e74732d4442373039333f7374796c653d266c6f676f3d7374796c65642d636f6d706f6e656e7473266c6f676f436f6c6f723d7768697465)
+
 
 `deploy`
 
