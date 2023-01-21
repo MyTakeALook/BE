@@ -40,7 +40,7 @@ public class CommentService {
             throw new IllegalArgumentException("삭제된 게시글의 댓글입니다.");
         }
 
-        List<Comment> commentList = commentRepository.findAllByBoardOrderByModifiedAtAsc(board.get()); // 복수형
+        List<Comment> commentList = commentRepository.findAllByBoardOrderByCreatedAtDesc(board.get()); // 복수형
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
 
         for (Comment comment : commentList) {
@@ -59,10 +59,22 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
         );
+        System.out.println("---------------------comment service----------------------");
+        System.out.println(boardId);
+        System.out.println(commentId);
+        System.out.println(commentRequestDto);
+        System.out.println(userDetailsImpl);
+        System.out.println(userDetailsImpl.getUser());
+        System.out.println(userDetailsImpl.getUser().getId());
+        System.out.println("---------------------comment service----------------------");
         if (!comment.getUser().getId().equals(userDetailsImpl.getUser().getId())) {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
         comment.CommentPut(commentRequestDto);
+        System.out.println("---------------------comment service2----------------------");
+        System.out.println(commentRequestDto.getComment());
+        System.out.println(comment.getComment());
+        System.out.println("---------------------comment service2----------------------");
         return new CommentResponseDto(comment);
     }
 

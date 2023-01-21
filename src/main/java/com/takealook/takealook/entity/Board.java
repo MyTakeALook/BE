@@ -5,6 +5,7 @@ import com.takealook.takealook.dto.BoardRequestDto;
 import com.takealook.takealook.entity.Liked;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter // Setter를 쓰면 회사한테 혼남
 @RequiredArgsConstructor
 public class Board extends BaseTimeEntity{
     @Id

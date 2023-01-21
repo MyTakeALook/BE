@@ -29,11 +29,17 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.stream.IntStream;
+//import java.util.stream.Stream;
+//import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+
+import static java.util.stream.IntStream.builder;
 
 @Service
 @RequiredArgsConstructor
@@ -45,21 +51,21 @@ public class BoardService {
     @Autowired
     AmazonS3Client amazonS3Client;
     @Transactional
-    public BoardResponseDto createBoard(BoardRequestDto boardRequestDto, MultipartFile urlimage, UserDetailsImpl userDetailsImpl) throws IOException {
+    public BoardResponseDto createBoard(BoardRequestDto boardRequestDto, MultipartFile file, UserDetailsImpl userDetailsImpl) throws IOException {
         String imageurl;
 
-        if (urlimage != null) {
-            if (!urlimage.getOriginalFilename().equals("")) {
+        if (file != null) {
+            if (!file.getOriginalFilename().equals("")) {
                 String originalName = UUID.randomUUID().toString();
                 System.out.println(originalName);
-                long size = urlimage.getSize();
+                long size = file.getSize();
 
                 ObjectMetadata objectMetaData = new ObjectMetadata();
-                objectMetaData.setContentType(urlimage.getContentType());
+                objectMetaData.setContentType(file.getContentType());
                 objectMetaData.setContentLength(size);
 
                 amazonS3Client.putObject(
-                        new PutObjectRequest(S3Bucket, originalName, urlimage.getInputStream(), objectMetaData)
+                        new PutObjectRequest(S3Bucket, originalName, file.getInputStream(), objectMetaData)
                                 .withCannedAcl(CannedAccessControlList.PublicRead)
                 );
 
@@ -78,12 +84,12 @@ public class BoardService {
 
         List<Liked> likedList = likeRepository.findAllByBoard(board);
 
-        BoardResponseDto boardResponseDto = new BoardResponseDto(board, Long.valueOf(likedList.size()));
+        BoardResponseDto boardResponseDto = new BoardResponseDto(board, Long.valueOf(likedList.size()), false);
         return boardResponseDto;
     }
 
-    public List<BoardResponseDto> readBoardRankList() {
-        List<Board> boardList = boardRepository.findAllByOrderByCreatedAtAsc();
+    public List<BoardResponseDto> readBoardRankList(UserDetailsImpl userDetailsImpl) {
+        List<Board> boardList = boardRepository.findAllByOrderByCreatedAtDesc();
         List<BoardResponseDto> boardResponseRankDtoList = new ArrayList<>();
 
         ArrayList<Long> tempBoardRank = new ArrayList<>();
@@ -110,16 +116,27 @@ public class BoardService {
         for (Integer integer : boardRank) {
             Optional<Board> board = boardRepository.findByBoardId(Long.valueOf(integer)+1);
             List<Liked> likedList = likeRepository.findAllByBoard(board.get());
-            BoardResponseDto boardResponseDto = new BoardResponseDto(board.get(), Long.valueOf(likedList.size()));
+
+            boolean isLike = false;
+            if (userDetailsImpl != null) {
+                Optional<Liked> liked = likeRepository.findByUserAndBoard(userDetailsImpl.getUser(), board.get());
+                if (liked.isPresent()) {
+                    isLike = true;
+                }
+            }
+
+            BoardResponseDto boardResponseDto = new BoardResponseDto(board.get(), Long.valueOf(likedList.size()), isLike);
             boardResponseRankDtoList.add(boardResponseDto);
         }
 
         return boardResponseRankDtoList;
     }
 
-    public List<BoardResponseDto> readBoardList() {
-        List<Board> boardList = boardRepository.findAllByOrderByModifiedAtAsc();
+    public List<BoardResponseDto> readBoardList(UserDetailsImpl userDetailsImpl) {
+        List<Board> boardList = boardRepository.findAllByOrderByCreatedAtDesc();
         List<BoardResponseDto> boardResponseDtoList = new ArrayList<>();
+
+        //Stream<BoardResponseDto> stream = boardResponseDtoList.stream();
 
         for (Board board : boardList) {
             if (board.isDelete()) {
@@ -128,14 +145,22 @@ public class BoardService {
 
             List<Liked> likedList = likeRepository.findAllByBoard(board);
 
-            BoardResponseDto boardResponseDto = new BoardResponseDto(board, Long.valueOf(likedList.size()));
+            boolean isLike = false;
+            if (userDetailsImpl != null) {
+                Optional<Liked> liked = likeRepository.findByUserAndBoard(userDetailsImpl.getUser(), board);
+                if (liked.isPresent()) {
+                    isLike = true;
+                }
+            }
+
+            BoardResponseDto boardResponseDto = new BoardResponseDto(board, Long.valueOf(likedList.size()), isLike);
             boardResponseDtoList.add(boardResponseDto);
         }
 
         return boardResponseDtoList;
     }
 
-    public BoardResponseDto readBoard(Long boardId) {
+    public BoardResponseDto readBoard(Long boardId, UserDetailsImpl userDetailsImpl) {
         Optional<Board> board = boardRepository.findByBoardId(boardId);
 
         if (board.get().isDelete()) {
@@ -145,9 +170,18 @@ public class BoardService {
             board.get().BoardVisit(); //잘 작동함. board에 visit 값이 올라감. 그럼 뭐가 문제? 리스폰스문제일까
             boardRepository.save(board.get());  // 저장을 안해서 자꾸만 visit가 0으로 초기화됐었다 !! 저장을 했더니 해결
         }
+
         List<Liked> likedList = likeRepository.findAllByBoard(board.get());
 
-        BoardResponseDto boardResponseDto = new BoardResponseDto(board.get(), Long.valueOf(likedList.size()));
+        boolean isLike = false;
+        if (userDetailsImpl != null) {
+            Optional<Liked> liked = likeRepository.findByUserAndBoard(userDetailsImpl.getUser(), board.get());
+            if (liked.isPresent()) {
+                isLike = true;
+            }
+        }
+
+        BoardResponseDto boardResponseDto = new BoardResponseDto(board.get(), Long.valueOf(likedList.size()), isLike);
         return boardResponseDto;
     }
 
@@ -188,7 +222,15 @@ public class BoardService {
 
         List<Liked> likedList = likeRepository.findAllByBoard(board.get());
 
-        BoardResponseDto boardResponseDto = new BoardResponseDto(board.get(), Long.valueOf(likedList.size()));
+        boolean isLike = false;
+        if (userDetailsImpl != null) {
+            Optional<Liked> liked = likeRepository.findByUserAndBoard(userDetailsImpl.getUser(), board.get());
+            if (liked.isPresent()) {
+                isLike = true;
+            }
+        }
+
+        BoardResponseDto boardResponseDto = new BoardResponseDto(board.get(), Long.valueOf(likedList.size()), isLike);
         return boardResponseDto;
     }
 
@@ -230,5 +272,4 @@ public class BoardService {
 
         return responseDto;
     }
-
 }

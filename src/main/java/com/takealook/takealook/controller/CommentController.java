@@ -71,6 +71,11 @@ public class CommentController {
                                            @PathVariable Long commentId,
                                            @RequestBody CommentRequestDto commentRequestDto,
                                            @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+        System.out.println("CommentControolleer여기로는 CommentControolleer여기로는");
+        System.out.println(boardId);
+        System.out.println(commentId);
+        System.out.println(commentRequestDto.getComment());
+        System.out.println();
         return commentService.putComment(boardId, commentId, commentRequestDto, userDetailsImpl);
     }
 

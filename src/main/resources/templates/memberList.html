@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"><!-- 1. -->
+<head>
+  <title>Websocket Chat</title>
+  <meta charset="utf-8">
+  <!-- JavaScript -->
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script th:inline="javascript">
+    function messageRoom(memberName) {
+      /*let roomName = $('#roomName').val();
+      let message = [[${memberList}]];*/
+
+      const auth = getToken();
+
+      $.ajax({
+        type: "POST",
+        url: "/chat/room",
+        data: {
+          name : memberName,
+        },
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("Authorization", auth);
+        },
+        success: function (response) {
+          alert(response);
+          console.log(response);
+          let chatRoomId = response['chatRoom'].roomId;
+          let sender = response['sender'];
+          //let participant = response['chatRoom'].member2.name;
+          enterRoom(chatRoomId, sender);
+        }
+      });
+    }
+
+    function enterRoom(chatRoomId, sender) {
+      localStorage.setItem('roomId',chatRoomId);
+      localStorage.setItem('sender',sender);
+      //localStorage.setItem('participant',participant);
+      location.href="/chat/room/enter/"+chatRoomId;
+    }
+
+    function  getToken() {
+      let cName = 'Authorization' + '=';
+      let cookieData = document.cookie;
+      let cookie = cookieData.indexOf('Authorization');
+      let auth = '';
+      if(cookie !== -1){
+        cookie += cName.length;
+        let end = cookieData.indexOf(';', cookie);
+        if(end === -1)end = cookieData.length;
+        auth = cookieData.substring(cookie, end);
+      }
+      return auth;
+      // kakao 로그인 사용한 경우 Bearer 추가
+      //if(auth.indexOf('Bearer') === -1 && auth !== ''){
+        //auth = 'Bearer ' + auth;
+      //}
+    }
+  </script>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h3>유저 리스트</h3>
+    </div>
+  </div>
+
+  <h1 th:each="member : ${memberList}">
+    <h1 th:text="${member.name}"></h1>
+    <button type="button" th:id="${member.name}" th:myName="${member.name}" th:onclick="messageRoom(this.getAttribute('id'))">메세지 보내기</button>
+  </h1>
+</div>
+</body>
+</html>

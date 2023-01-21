@@ -26,8 +26,10 @@ public class BoardResponseDto { //
     private Long love;
     private Long visit;
 
+    private boolean islove;
 
-    public BoardResponseDto(Board board, Long likedSize) {
+
+    public BoardResponseDto(Board board, Long likedSize, boolean islove) {
         this.boardId = board.getBoardId();
         this.createdAt = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
@@ -39,6 +41,7 @@ public class BoardResponseDto { //
         this.text = board.getText();
         this.love = likedSize;
         this.visit = board.getVisit();
+        this.islove = islove;
         for (Comment comment : board.getComment()) {
             if (comment.isDelete()) {
                 continue;

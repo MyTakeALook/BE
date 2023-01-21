@@ -34,7 +34,10 @@ public class Comment extends BaseTimeEntity{
     }
 
     public void CommentPut(CommentRequestDto commentRequestDto) {
+        System.out.println("---------------CommentPut--------여기로 오나?????");
+        System.out.println(commentRequestDto.getComment());
         this.comment = commentRequestDto.getComment();
+        System.out.println(this.comment);
     }
     public void CommentDelete() {
         this.isDelete = true;
