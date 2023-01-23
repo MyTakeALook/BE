@@ -4,19 +4,24 @@ import com.takealook.takealook.dto.*;
 import com.takealook.takealook.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import java.util.Enumeration;
+
 import static org.springframework.http.HttpStatus.OK;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
-
+    @ResponseBody
     @PostMapping("/signup") //@RequestBody
     public ResponseEntity<AuthMessage> signup(@RequestBody JoinRequestDto joinRequestDto) {
         userService.signup(joinRequestDto);
@@ -33,6 +38,43 @@ public class UserController {
         //AuthMessage authMessage = new AuthMessage("로그인 성공");
         return loginErrorMessage;
     }
+
+    @GetMapping("/api/signup")
+    public String signupGet(Model model) {
+        return "signup";
+    }
+
+    @PostMapping("/api/signup") //@RequestBody
+    public ResponseEntity<AuthMessage> signupPost(@RequestBody JoinRequestDto joinRequestDto) {
+        userService.signup(joinRequestDto);
+        AuthMessage authMessage = new AuthMessage("회원가입 성공");
+        return new ResponseEntity<>(authMessage, OK);
+    }
+
+    @GetMapping("/api/login")
+    public String loginGet(Model model) {
+        return "login";
+    }
+
+    @ResponseBody
+    @PostMapping("/api/login") //@RequestBody
+    public LoginErrorMessage loginPost(@RequestBody LoginRequestDto loginRequestDto,
+                                   HttpServletResponse response, HttpServletRequest request) {
+        Enumeration eHeader = request.getHeaderNames();
+        while (eHeader.hasMoreElements()) {
+            System.out.println("여기로 오나");
+            String request_Name = (String)eHeader.nextElement();
+            String request_Value = request.getHeader(request_Name);
+            System.out.println("request_Name : " + request_Name + " request_Value : " + request_Value);
+        }
+
+        System.out.println("여기까지 오는거냐???");
+        LoginErrorMessage loginErrorMessage = userService.login(loginRequestDto, response);
+
+        //AuthMessage authMessage = new AuthMessage("로그인 성공");
+        return loginErrorMessage;
+    }
+
 
 //    @PostMapping("/pw-find")
 //    public pwfind(@RequestBody PasswordFindRequestDto passwordFindRequestDto) {

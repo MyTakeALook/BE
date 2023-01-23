@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+    function memberLogin() {
+        let userName = $('#userName').val();
+        let password = $(`#password`).val();
+        let data = {'username':userName, 'password': password};
+        $.ajax({
+            type: "POST",
+            url: "/user/api/login",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function (response, status, xhr) {
+                alert("여기까진 오잖아?????");
+                document.cookie = 'Authorization' + '=' + xhr.getResponseHeader('Authorization') + ';path=/';
+            }
+        });
+    }
+</script>
+<body>
+<h1>로그인</h1>
+<div style="width: 1500px; margin: auto; text-align: center;">
+    <input type="text" id="userName" style="width: 20%">
+    <br>
+    <input type="text" id="password" style="width: 15%">
+    <br>
+    <input type="button" onclick="memberLogin()" value="제출">
+</div>
+</body>
+</html>

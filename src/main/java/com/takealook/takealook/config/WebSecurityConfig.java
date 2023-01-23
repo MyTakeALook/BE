@@ -73,6 +73,7 @@ public class WebSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.addAllowedOrigin("http://43.200.163.145:3000");
+        configuration.addAllowedOrigin("http://localhost:8080/chatrooms");
         configuration.setAllowCredentials(true);
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");

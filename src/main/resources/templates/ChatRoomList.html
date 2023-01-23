@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Websocket Chat</title>
+    <meta charset="utf-8">
+</head>
+<body>
+<div>
+    <div>
+        <div>
+            <h3>채팅방 리스트</h3>
+        </div>
+    </div>
+    <div>
+        <div>
+            <label>방제목</label>
+        </div>
+        <input type="text" id="roomTitle">
+        <div>
+            <button type="button" onclick="createRoom()">채팅방 개설</button>
+        </div>
+    </div>
+    <ul id="roomList">
+    </ul>
+</div>
+<!-- JavaScript -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // HTML 문서를 로드할 때마다 실행합니다.
+        roomPage();
+    })
+
+    function roomPage() {
+        $('#roomList').empty();
+
+        $.ajax({
+            type: "GET",
+            url: "/chatrooms-list",
+            data: {},
+            success: function (response) {
+                console.log(response);
+                for (let i = 0; i < response.length; i++) {
+                    let roomId = response[i].roomId;
+                    let roomTitle = response[i].roomTitle;
+                    let roomOwner = response[i].roomOwner;
+                    let roomUUID = response[i].roomUUID;
+                    let tempHtml = makeHtml(roomId, roomTitle, roomOwner, roomUUID);
+                    $('#roomList').append(tempHtml);
+                }
+            }
+        });
+    }
+
+    function createRoom() {
+        const auth = getToken();
+
+        let roomTitle = $('#roomTitle').val();
+        alert("먼저 여기로 와야함");
+        $.ajax({
+            type: "POST",
+            url: "/chatroom",
+            data: {
+                roomTitle : roomTitle
+            },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", auth);
+            },
+            success: function (response) {
+                alert("??? 여기로 안와???");
+                console.log(response);
+                let roomId = response.roomId;
+                let roomTitle = response.roomTitle;
+                let roomOwner = response.roomOwner;
+                let roomUUID = response.roomUUID;
+                let tempHtml = makeHtml(roomId, roomTitle, roomOwner, roomUUID);
+                $('#roomList').append(tempHtml);
+                //window.location.reload();
+            }
+        });
+    }
+
+    function makeHtml(roomId, roomTitle, roomOwner, roomUUID) {
+        return `<li class="list-group-item list-group-item-action" onclick="enterRoom( '${roomUUID}')">
+                    ${roomId}, ${roomTitle}, ${roomOwner}
+                </li>`
+    }
+
+    function enterRoom(roomUUID) {
+        localStorage.setItem('roomUUID',roomUUID);
+        location.href="/chat/room/"+roomUUID;
+    }
+
+    function  getToken() {
+        let cName = 'Authorization' + '=';
+        let cookieData = document.cookie;
+        let cookie = cookieData.indexOf('Authorization');
+        let auth = '';
+        if(cookie !== -1){
+            cookie += cName.length;
+            let end = cookieData.indexOf(';', cookie);
+            if(end === -1)end = cookieData.length;
+            auth = cookieData.substring(cookie, end);
+        }
+        return auth;
+    }
+</script>
+</body>
+</html>
