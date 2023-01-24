@@ -49,22 +49,22 @@ public class UserService {
         String password = loginRequestDto.getPassword();
 
         if (username == null || password == null || username.equals("") || password.equals("")) {
-            return new LoginErrorMessage(400, "아이디 또는 비밀번호가 입력되지 않았습니다.", null);
+            return new LoginErrorMessage(400, "아이디 또는 비밀번호가 입력되지 않았습니다.", null, null);
         }
 
         // 사용자 확인
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isEmpty()) {
-            return new LoginErrorMessage(401, "존재하지 않는 id입니다", null);
+            return new LoginErrorMessage(401, "존재하지 않는 id입니다", null, null);
         }
         // 비밀번호 확인
         if (!passwordEncoder.matches(password, user.get().getPassword())) {
-            return new LoginErrorMessage(402, "password가 잘못되었습니다", null);
+            return new LoginErrorMessage(402, "password가 잘못되었습니다", null,null);
         }
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER,
                 jwtUtil.createToken(user.get().getUsername(),user.get().getRole()));
-        return new LoginErrorMessage(200, "로그인 성공", jwtUtil.createToken(user.get().getUsername(),user.get().getRole()));
+        return new LoginErrorMessage(200, "로그인 성공", user.get().getUsername(), jwtUtil.createToken(user.get().getUsername(),user.get().getRole()));
     }
 
 //    public findpw(PasswordFindRequestDto passwordFindRequestDto) {

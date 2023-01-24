@@ -16,7 +16,10 @@
             contentType: "application/json",
             data: JSON.stringify(data),
             success: function (response, status, xhr) {
-                alert("여기까진 오잖아?????");
+                console.log(response);
+                console.log(response.userName);
+                //localStorage.setItem('roomUUID', roomUUID);
+                localStorage.setItem('userName', response.userName);
                 document.cookie = 'Authorization' + '=' + xhr.getResponseHeader('Authorization') + ';path=/';
             }
         });

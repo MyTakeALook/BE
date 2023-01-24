@@ -39,7 +39,7 @@ public class WebSecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         // h2-console 사용 및 resources 접근 허용 설정
         return (web) -> web.ignoring()
-//                .requestMatchers(PathRequest.toH2Console())  //이거 있었더니 계속 H2를 찾아댐;
+                .requestMatchers(PathRequest.toH2Console())  //이거 있었더니 계속 H2를 찾아댐;
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
     // .requestMatchers(PathRequest.toH2Console()) = 이거 때문에 자꾸 h2를 찾음 No qualifying bean of type 'org.springframework.boot.autoconfigure.h2.H2ConsoleProperties' available

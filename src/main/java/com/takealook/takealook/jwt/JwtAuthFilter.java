@@ -26,15 +26,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        /*System.out.println("authtoken");
-        System.out.println(request.getHeader("Authorization"));
-        Enumeration eHeader = request.getHeaderNames();
-        while (eHeader.hasMoreElements()) {
-            System.out.println("여기로 오나");
-            String request_Name = (String)eHeader.nextElement();
-            String request_Value = request.getHeader(request_Name);
-            System.out.println("request_Name : " + request_Name + " request_Value : " + request_Value);
-        }*/
+//        Enumeration eHeader = request.getHeaderNames();
+//        while (eHeader.hasMoreElements()) {
+//            System.out.println("여기로 오나");
+//            String request_Name = (String)eHeader.nextElement();
+//            String request_Value = request.getHeader(request_Name);
+//            System.out.println("request_Name : " + request_Name + " request_Value : " + request_Value);
+//        }
         String token = jwtUtil.resolveToken(request);
         System.out.println(token);
         if(token != null) {

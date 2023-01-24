@@ -89,6 +89,11 @@
     function enterRoom(roomUUID) {
         localStorage.setItem('roomUUID',roomUUID);
         location.href="/chat/room/"+roomUUID;
+
+        // var httpRequest = new XMLHttpRequest(); // ajax랑 같은 비동기 방식??
+        // httpRequest.open("GET", "/chat/room/"+roomUUID, true); // ajax랑 같은 비동기 방식??
+        // httpRequest.setRequestHeader("Authorization", auth); // ajax랑 같은 비동기 방식??
+        // httpRequest.send(); // ajax랑 같은 비동기 방식??
     }
 
     function  getToken() {

@@ -9,5 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class ChatConnect {
-    private String senderId;
+    //private String senderId;
+    private String roomUUID;
 }

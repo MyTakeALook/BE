@@ -8,5 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ChatDisconnect {
-    private String senderId;
+    //private String senderId;
+    private String roomUUID;
 }

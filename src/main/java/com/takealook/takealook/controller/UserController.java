@@ -60,15 +60,14 @@ public class UserController {
     @PostMapping("/api/login") //@RequestBody
     public LoginErrorMessage loginPost(@RequestBody LoginRequestDto loginRequestDto,
                                    HttpServletResponse response, HttpServletRequest request) {
-        Enumeration eHeader = request.getHeaderNames();
+        /*Enumeration eHeader = request.getHeaderNames();
         while (eHeader.hasMoreElements()) {
             System.out.println("여기로 오나");
             String request_Name = (String)eHeader.nextElement();
             String request_Value = request.getHeader(request_Name);
             System.out.println("request_Name : " + request_Name + " request_Value : " + request_Value);
-        }
+        }*/
 
-        System.out.println("여기까지 오는거냐???");
         LoginErrorMessage loginErrorMessage = userService.login(loginRequestDto, response);
 
         //AuthMessage authMessage = new AuthMessage("로그인 성공");

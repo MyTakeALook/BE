@@ -55,37 +55,122 @@
 <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
 <script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
 <script>
+  const auth = getToken();
+
+  let userName = localStorage.getItem('userName');
   let roomUUID = localStorage.getItem('roomUUID');
+
+  $(document).ready(function () {
+    // HTML 문서를 로드할 때마다 실행합니다.
+    roomPage();
+  })
+
+  function roomPage() {
+    $.ajax({
+      type: "POST",
+      url: "/chat/room/enter/" + roomUUID,
+      data: {
+        roomUUID : roomUUID
+      },
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", auth);
+      },
+      success: function (response) {
+        alert("참가 성공???");
+        console.log(response);
+
+        $('#chat').empty();
+
+        for (let i = 0; i < response.length; i++) {
+          let tempHtml;
+          if (userName == response[i].sender) {
+            tempHtml = makeHtmlMessageRight(response[i]);
+          } else {
+            tempHtml = makeHtmlMessageLeft(response[i]);
+          }
+          $('#chat').append(tempHtml);
+        }
+      }
+    });
+  }
 
   let sock = new SockJS("/ws-stomp"); //new SockJS()를 사용하여 아까 핸들러에서 지정해준 endPoint를 사용하여 연결을 해준다.
   let ws = Stomp.over(sock);
 
   ws.connect({}, function(frame) {
+    ws.send("/pub/chat/connect", {}, JSON.stringify({roomUUID:roomUUID})); //receiver:participant,
+
     ws.subscribe("/sub/chat/room/" + roomUUID, function(message) {
       let receive = JSON.parse(message.body);
-      receiveMessage(receive);
+      alert("구독 메세지");
+      console.log(receive);
+      if (receive.participantNumber) {
+        receiveParticipantNumber(receive);
+      } else {
+        receiveMessage(receive);
+      }
     });
   }, function(error) {
     alert("error"+error);
   });
 
-  function sendMessage() {
-    const auth = getToken();
+  window.onbeforeunload = function () {
+    $.ajax({
+      type: "POST",
+      url: "/chat/room/exit/" + roomUUID,
+      data: {
+        roomUUID : roomUUID
+      },
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader("Authorization", auth);
+      },
+      success: function (response) {
+        alert("퇴장 성공???");
+      }
+    });
+    ws.send("/pub/chat/disconnect", {}, JSON.stringify({roomUUID:roomUUID}));
+  };
 
+  function sendMessage() {
     let sendText = $('#sendText').val();
     ws.send("/pub/chat/message", {}, JSON.stringify({userJWT:auth, message:sendText, roomUUID:roomUUID})); //receiver:participant,
   }
 
   function receiveMessage(receive) {
-    let tempHtml = makeHtmlMessage(receive);
+    let tempHtml;
+    if (userName == receive.sender) {
+      tempHtml = makeHtmlMessageRight(receive);
+    } else {
+      tempHtml = makeHtmlMessageLeft(receive);
+    }
     $('#chat').append(tempHtml);
   }
 
-  function makeHtmlMessage(receive) {
-    return `<li>
-                <div>${receive.sender}</div>
-                <div>${receive.message}</div>
+  function makeHtmlMessageRight(receive) {
+    return `<li class="right">
+                <div class="sender">${receive.sender}</div>
+                <div class="message">${receive.message}</div>
             </li>`
+  }
+
+  function makeHtmlMessageLeft(receive) {
+    return `<li class="left">
+                <div class="sender">${receive.sender}</div>
+                <div class="message">${receive.message}</div>
+            </li>`
+  }
+
+  function receiveParticipantNumber(receive) {
+    $('#participantNumber').empty();
+    let tempHtml;
+    tempHtml = makeHtmlParticipantNumber(receive);
+    $('#participantNumber').append(tempHtml);
+  }
+
+  function makeHtmlParticipantNumber(receive) {
+    return `<span>
+                채팅자 수 : ${receive.participantNumber}
+            </span>`
   }
 
   function  getToken() {
